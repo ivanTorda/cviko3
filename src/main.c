@@ -47,45 +47,22 @@ RCC_ClocksTypeDef RCC_Clocks;
   * @param  None
   * @retval None
   */
-int main(void)
-{
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       file (startup_stm32l1xx_xl.s) before to branch to application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32l1xx.c file
-     */ 
-  
-  /* SysTick end of count event each 1ms */
-  RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
-  
-  /* Initialize LED2 */
-  STM_EVAL_LEDInit(LED2);
-  
-  /* Initialize User_Button on STM32NUCLEO */
-  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
-  
-  /* Initiate Blink Speed variable */ 
-  BlinkSpeed = 0;
-  
-  /* Infinite loop */
-  while (1)
-  {
-    /* Test on blink speed */
-    if(BlinkSpeed == 0)
-    {
-      /*LED2 Toggle each 50ms*/
-      STM_EVAL_LEDToggle(LED2);
-      Delay(50);      
-    }      
-    else if(BlinkSpeed == 1)
-    {
-      STM_EVAL_LEDToggle(LED2);
-      /*LED2 Toggle each 200ms */
-      Delay(200); 
-    }
-  }
+int main(void) {
+
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+	GPIO_InitTypeDef gpioInitStruct;
+	gpioInitStruct.GPIO_Mode = GPIO_Mode_OUT;
+	gpioInitStruct.GPIO_OType = GPIO_OType_PP;
+	gpioInitStruct.GPIO_Pin = GPIO_Pin_5;
+	gpioInitStruct.GPIO_Speed = GPIO_Speed_40MHz;
+	GPIO_Init(GPIOA, &gpioInitStruct);
+	//set PA5 ON
+	GPIO_SetBits(GPIOA, GPIO_Pin_5);
+
+
+	while(1){
+	}
+
 }
 
 /**
@@ -105,8 +82,7 @@ void Delay(__IO uint32_t nTime)
 * @param  None
 * @retval None
 */
-void TimingDelay_Decrement(void)
-{
+void TimingDelay_Decrement(void){
   if (TimingDelay != 0x00)
   { 
     TimingDelay--;
