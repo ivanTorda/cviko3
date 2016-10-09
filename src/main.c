@@ -49,15 +49,21 @@ RCC_ClocksTypeDef RCC_Clocks;
   */
 int main(void) {
 
+	//init GPIOA
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 	GPIO_InitTypeDef gpioInitStruct;
 	gpioInitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	gpioInitStruct.GPIO_OType = GPIO_OType_PP;
 	gpioInitStruct.GPIO_Pin = GPIO_Pin_5;
 	gpioInitStruct.GPIO_Speed = GPIO_Speed_40MHz;
+	//put GPIO structure into function
 	GPIO_Init(GPIOA, &gpioInitStruct);
 	//set PA5 ON
 	GPIO_SetBits(GPIOA, GPIO_Pin_5);
+	//set PA5 OFF
+	GPIO_ResetBits(GPIOA, GPIO_Pin_5);
+	//toggle PA5
+	GPIO_ToggleBits(GPIOA,GPIO_Pin_5);
 
 
 	while(1){
@@ -82,7 +88,8 @@ void Delay(__IO uint32_t nTime)
 * @param  None
 * @retval None
 */
-void TimingDelay_Decrement(void){
+void TimingDelay_Decrement(void)
+{
   if (TimingDelay != 0x00)
   { 
     TimingDelay--;
