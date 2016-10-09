@@ -63,8 +63,15 @@ int main(void) {
 	gpioInitStruct.GPIO_PuPd = GPIO_PuPd_UP;
 	gpioInitStruct.GPIO_Speed = GPIO_Speed_40MHz;
 	GPIO_Init(GPIOC, &gpioInitStruct);
+	uint8_t buttonState = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
 
 	while(1){
+		 buttonState = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
+		 if(buttonState == 1){
+				GPIO_SetBits(GPIOA, GPIO_Pin_5);
+		 }else{
+				GPIO_ResetBits(GPIOA, GPIO_Pin_5);
+		 }
 	}
 
 }
