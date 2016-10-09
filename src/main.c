@@ -37,10 +37,11 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 static __IO uint32_t TimingDelay;
-uint8_t BlinkSpeed = 0;
 /* Private function prototypes -----------------------------------------------*/
 RCC_ClocksTypeDef RCC_Clocks;
 /* Private functions ---------------------------------------------------------*/
+
+uint8_t status = 0;
 
 /**
   * @brief   Main program
@@ -58,16 +59,12 @@ int main(void) {
 	gpioInitStruct.GPIO_Speed = GPIO_Speed_40MHz;
 	GPIO_Init(GPIOA, &gpioInitStruct);
 	GPIO_SetBits(GPIOA, GPIO_Pin_5);
-	gpioInitStruct.GPIO_Mode = GPIO_Mode_IN;
-	gpioInitStruct.GPIO_Pin = GPIO_Pin_13;
-	gpioInitStruct.GPIO_PuPd = GPIO_PuPd_UP;
-	gpioInitStruct.GPIO_Speed = GPIO_Speed_40MHz;
-	GPIO_Init(GPIOC, &gpioInitStruct);
-	uint8_t buttonState = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
+	RCC_GetClocksFreq(&RCC_Clocks);
+	SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
+	STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
 
 	while(1){
-		 buttonState = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
-		 if(buttonState == 1){
+		 if(status == 1){
 				GPIO_SetBits(GPIOA, GPIO_Pin_5);
 		 }else{
 				GPIO_ResetBits(GPIOA, GPIO_Pin_5);
